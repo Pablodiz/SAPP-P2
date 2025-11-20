@@ -70,7 +70,7 @@ public class UserController {
 
         //modoficar este método para implementar el resto de usuarios 
 
-        String token = tokenProvider.generateToken(userService.loadUserByUsername(authentication.getPrincipal()));
+        //String token = tokenProvider.generateToken(userService.loadUserByUsername(authentication.getPrincipal()));
 
         return ResponseEntity.ok(new TokenResponse(token));
     }    
