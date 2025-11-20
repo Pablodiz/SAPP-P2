@@ -3,6 +3,7 @@ package com.tasks.rest;
 import com.tasks.business.exceptions.DuplicatedResourceException;
 import com.tasks.business.exceptions.InalidStateException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
+import com.tasks.business.exceptions.PermissionException;
 import com.tasks.rest.json.ErrorDetailsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,4 +44,14 @@ public class ExceptionsHandler {
         ex.getMessage(), null, request.getContextPath(), 404);
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(PermissionException.class)
+    public final ResponseEntity<ErrorDetailsResponse> handlePermissionException(
+        PermissionException ex, WebRequest request) {
+        logger.warn(ex.getMessage(), ex);
+        ErrorDetailsResponse errorDetails = new ErrorDetailsResponse(System.currentTimeMillis(), "Permission Denied", 
+        ex.getMessage(), null, request.getContextPath(), 403);
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+    }
 }
+    
