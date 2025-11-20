@@ -99,8 +99,8 @@ public class ProjectController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> doRemoveProjectById(@PathVariable("id") Long id) throws InstanceNotFoundException {
-        projectService.removeById(id);
+    public ResponseEntity<?> doRemoveProjectById(Principal principal, @PathVariable("id") Long id) throws InstanceNotFoundException {
+        projectService.removeById(principal.getName(), id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
