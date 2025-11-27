@@ -71,9 +71,9 @@ public class TaskController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks", method = RequestMethod.POST)
-    public ResponseEntity<?> doCreateTask(@RequestBody TaskDto task) 
+    public ResponseEntity<?> doCreateTask(Principal principal, @RequestBody TaskDto task) 
             throws DuplicatedResourceException, InstanceNotFoundException {
-        Task newTask = tasksService.create(task.getName(), task.getDescription(),
+        Task newTask = tasksService.create(principal.getName(), task.getName(), task.getDescription(),
                 task.getType(), task.getOwner(), task.getProject());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(newTask.getTaskId()).toUri();
@@ -90,9 +90,9 @@ public class TaskController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> doUpdateTask(@PathVariable("id") Long id, @RequestBody TaskDto task) 
+    public ResponseEntity<?> doUpdateTask(Principal principal, @PathVariable("id") Long id, @RequestBody TaskDto task) 
         throws InstanceNotFoundException, InalidStateException, DuplicatedResourceException {        
-        Task updatedTask = tasksService.update(id, task.getName(), task.getDescription(),
+        Task updatedTask = tasksService.update(principal.getName(), id, task.getName(), task.getDescription(),
             task.getType(), task.getOwner(), task.getProject());
         return ResponseEntity.ok(updatedTask);
     }
@@ -105,8 +105,8 @@ public class TaskController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> doRemoveTaskById(@PathVariable("id") Long id) throws InstanceNotFoundException {
-        tasksService.removeById(id);
+    public ResponseEntity<?> doRemoveTaskById(Principal principal, @PathVariable("id") Long id) throws InstanceNotFoundException {
+        tasksService.removeById(principal.getName(), id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
