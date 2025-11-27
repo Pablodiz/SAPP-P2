@@ -46,7 +46,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project update(Long projectId, String name, String description) 
+    public Project update(String userName, Long projectId, String name, String description) 
             throws DuplicatedResourceException, InstanceNotFoundException {
         Optional<Project> project = projectsRepository.findById(projectId);
         if(!project.isPresent()) {
@@ -57,6 +57,9 @@ public class ProjectService {
         if(anotherProject != null && !Objects.equals(anotherProject.getProjectId(), projectId)) {
             throw new DuplicatedResourceException("Project", name, 
                 MessageFormat.format("Project ''{0}'' already exists", name));
+        }
+        if(!project.get().getAdmin().getUsername().equals(userName)) {
+            throw new PermissionException();
         }
         project.get().setName(name);
         project.get().setDescription(description);
