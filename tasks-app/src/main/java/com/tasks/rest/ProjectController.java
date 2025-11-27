@@ -80,14 +80,17 @@ public class ProjectController {
         @ApiResponse(responseCode = "200", description = "Successfully updated the project",
             content = {@Content(mediaType = "application/json",
                 schema = @Schema(implementation = Project.class))}),
+        @ApiResponse(responseCode = "403", description = "The user does not have the permission to update the project",
+    content = {@Content(mediaType = "application/json",
+        schema = @Schema(implementation = ErrorDetailsResponse.class))}),
         @ApiResponse(responseCode = "404", description = "The project does not exist or there is one with the same name",
             content = {@Content(mediaType = "application/json",
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> doUpdateProject(@PathVariable("id") Long id, @RequestBody ProjectDto project) 
+    public ResponseEntity<?> doUpdateProject(Principal principal, @PathVariable("id") Long id, @RequestBody ProjectDto project) 
         throws InstanceNotFoundException, DuplicatedResourceException {        
-        Project updatedProject = projectService.update(id, project.getName(), project.getDescription());
+        Project updatedProject = projectService.update(principal.getName(), id, project.getName(), project.getDescription());
         return ResponseEntity.ok(updatedProject);
     }
 
