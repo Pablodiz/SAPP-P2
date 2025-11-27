@@ -118,10 +118,10 @@ public class TaskController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}/changeState", method = RequestMethod.POST)
-    public ResponseEntity<?> doChangeTaskState(@PathVariable("id") Long id,
+    public ResponseEntity<?> doChangeTaskState( Principal principal, @PathVariable("id") Long id,
                                          @RequestBody(required = true) TextNode state) 
         throws InstanceNotFoundException {        
-        Task task = tasksService.changeState(id, TaskState.valueOf(state.asText()));
+        Task task = tasksService.changeState(principal.getName(), id, TaskState.valueOf(state.asText()));
         return ResponseEntity.ok(task);
     }
 

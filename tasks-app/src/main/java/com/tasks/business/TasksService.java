@@ -102,7 +102,7 @@ public class TasksService {
             throw new InalidStateException("Task " + taskToUpdate.getName() + " is closed.");
         }
 
-        if(!taskToUpdate.getOwner().getUsername().equals(userName)) {
+        if(!project.get().getAdmin().getUsername().equals(userName)) {
             throw new PermissionException();
         }
 
@@ -158,12 +158,17 @@ public class TasksService {
     }
     
     @Transactional
-    public Task changeState(Long id, TaskState state)  throws InstanceNotFoundException {
+    public Task changeState(String userName, Long id, TaskState state)  throws InstanceNotFoundException {
         
         Optional<Task> optTask = tasksRepository.findById(id);
         if(!optTask.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
+
+        if(!optTask.get().getProject().getAdmin().getUsername().equals(userName)) {
+            throw new PermissionException();
+        }
+
         Task task = optTask.get();
         task.setState(state);
         return tasksRepository.save(task);
@@ -209,7 +214,7 @@ public class TasksService {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
 
-        if(!optTask.get().getOwner().getUsername().equals(userName)) {
+        if(!optTask.get().getProject().getAdmin().getUsername().equals(userName)) {
             throw new PermissionException();
         }
 

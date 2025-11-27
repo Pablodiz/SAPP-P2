@@ -74,17 +74,21 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/react-libs/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/tasks/*").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/projects").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/projects/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/projects/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/tasks").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/tasks/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/tasks/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/tasks/*/changeState").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/projects/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/projects/*/tasks").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/projects/*/tasks").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/projects/*/tasks/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/projects/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/comments").authenticated()
                 .anyRequest().denyAll());
 
         return http.build();
